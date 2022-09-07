@@ -193,6 +193,9 @@ void app_main(void)
     {
         uint8_t sensor_data_1[18] = {0};
         //uint8_t sensor_data_2[3] = {0};
+        //
+        //
+        //
 
         ESP_ERROR_CHECK(i2c_master_init());
         ESP_LOGI(TAG, "I2C initialized successfully");
