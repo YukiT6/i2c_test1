@@ -192,10 +192,7 @@ void app_main(void)
     while (1)
     {
         uint8_t sensor_data_1[18] = {0};
-        //uint8_t sensor_data_2[3] = {0};
-        //
-        //
-        //
+        // uint8_t sensor_data_2[3] = {0};
 
         ESP_ERROR_CHECK(i2c_master_init());
         ESP_LOGI(TAG, "I2C initialized successfully");
@@ -205,23 +202,34 @@ void app_main(void)
         // ESP_LOGI(TAG, "DATA READY STATUS = %X %X", sensor_data_1[0],sensor_data_1[1]);
 
         //測定値読み取り
-        //i2c_master_sensor_test(I2C_MASTER_NUM, &sensor_data_2);
+        // i2c_master_sensor_test(I2C_MASTER_NUM, &sensor_data_2);
         i2c_master_sensor_readM(I2C_MASTER_NUM, &sensor_data_1);
-        //ESP_LOGI(TAG, "DATA READY STATUS = %X %X", sensor_data_2[0], sensor_data_2[1]);
-        ESP_LOGI(TAG, "READ DATA");
-        for (int i = 0; i < 18; i += 6)
-        {
-            ESP_LOGI(TAG, "%X %X %X %X %X %X", sensor_data_1[i], sensor_data_1[i + 1], sensor_data_1[i + 2], sensor_data_1[i + 3], sensor_data_1[i + 4], sensor_data_1[i + 5]);
-        }
-        float co2;
+        // ESP_LOGI(TAG, "DATA READY STATUS = %X %X", sensor_data_2[0], sensor_data_2[1]);
+        // ESP_LOGI(TAG, "READ DATA");
+        // for (int i = 0; i < 18; i += 6)
+        // {
+        //     ESP_LOGI(TAG, "%X %X %X %X %X %X", sensor_data_1[i], sensor_data_1[i + 1], sensor_data_1[i + 2], sensor_data_1[i + 3], sensor_data_1[i + 4], sensor_data_1[i + 5]);
+        // }
+        float co2, temp,humi;
         unsigned int tempU32;
         tempU32 = (unsigned int)((((unsigned int)sensor_data_1[0]) << 24) |
                                  (((unsigned int)sensor_data_1[1]) << 16) |
                                  (((unsigned int)sensor_data_1[3]) << 8) |
                                  ((unsigned int)sensor_data_1[4]));
-
         co2 = *(float *)&tempU32;
-        ESP_LOGI(TAG, "co2 %f", co2);
+        tempU32 = (unsigned int)((((unsigned int)sensor_data_1[6]) << 24) |
+                                 (((unsigned int)sensor_data_1[7]) << 16) |
+                                 (((unsigned int)sensor_data_1[9]) << 8) |
+                                 ((unsigned int)sensor_data_1[10]));
+        temp = *(float *)&tempU32;
+        tempU32 = (unsigned int)((((unsigned int)sensor_data_1[12]) << 24) |
+                                 (((unsigned int)sensor_data_1[13]) << 16) |
+                                 (((unsigned int)sensor_data_1[15]) << 8) |
+                                 ((unsigned int)sensor_data_1[16]));
+        humi = *(float *)&tempU32;
+        ESP_LOGI(TAG, "CO2 %.0f", co2);
+        ESP_LOGI(TAG, "Tempature %.1f", temp);
+        ESP_LOGI(TAG, "Humidity %.0f", humi);
 
         // //continuous measurement start
         // i2c_master_sensor_CM(I2C_MASTER_NUM, &sensor_data_1);
